@@ -1,25 +1,18 @@
 steps:
-- name: node
-  id: build tests
-  entrypoint: npm
+- # This step builds the container image.
+- name: 'gcr.io/cloud-builders/docker'
+  id: Build
   args:
-  - 'install'
+  - 'build'
+  - '-t'
+  - 'gcr.io/$PROJECT_ID/constellationautotest:$SHORT_SHA'
+  - '.'
 
-- name: node
-  id: run development environment tests
-  entrypoint: npm
+  # This step pushes the image to Container Registry
+# The PROJECT_ID and SHORT_SHA variables are automatically
+# replaced by Cloud Build.
+- name: 'gcr.io/cloud-builders/docker'
+  id: Push
   args:
-  - 'run'
-  - 'test-dev'
-
- # This step deploys the stage application in Kubernetes
-- name: 'gcr.io/cloud-builders/gcloud'
-  id: Start Stage Deployment
-  args:
-  - builds
-  - submit
-  - --config
-  - cloudbuild-stage.yaml
-  - --substitutions
-  - _SHORT_SHA=$TRACE_TOKEN
-  - .
+  - 'push'
+  - 'gcr.io/$PROJECT_ID/constellationautotest:$SHORT_SHA'
