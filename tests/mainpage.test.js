@@ -3,7 +3,7 @@ const config = require('config');
 
 const homeUrl = config.get('constellation-url');
 
-it('Testing to see if ${homeUrl} is up', async () =>{
+it(`Testing to see if ${homeUrl} is up`, async () =>{
     
     var options = {
         uri: homeUrl,
